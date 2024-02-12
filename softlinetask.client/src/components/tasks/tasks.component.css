@@ -1,0 +1,23 @@
+.table-row:hover {
+    background-color:ghostwhite;
+    cursor: pointer;
+}
+
+.table-row.selected {
+    background-color:ghostwhite;
+}
+
+.mat-column-desc {
+    word-wrap: break-word;
+    hyphens: auto;
+    width: 70%;
+}
+
+.input-form {
+    width: 100%;
+    margin: 20px;
+}
+
+.add-btn {
+    margin: 20px;
+}

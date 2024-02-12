@@ -1,0 +1,90 @@
+<h1><strong>WORK TASKS</strong></h1>
+
+<div>
+    <table mat-table [dataSource]="Tasks$" class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Наименование </th>
+            <td mat-cell *matCellDef="let task"> {{task.name}}  </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description" >
+            <th mat-header-cell *matHeaderCellDef class="mat-column-desc"> Описание </th>
+            <td mat-cell *matCellDef="let task" class="mat-column-desc"> {{task.description}}  </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Статус </th>
+            <td mat-cell *matCellDef="let task"> {{task.status.name}}  </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="columnsHeaders"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnsHeaders" 
+        [class.selected]="row === selectedTask"
+        (click)="onSelect(row)" class="table-row">
+        </tr>
+    </table>
+
+
+    @if (newTask){
+        <form (ngSubmit)="saveAddTask()" #addForm="ngForm" class="input-form">
+            <mat-form-field>
+                <mat-label>Наименование</mat-label>
+                <input name="name" matInput required pattern="(.|\s)*\S(.|\s)*" [(ngModel)]="newTask.name" #name="ngModel">
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+                <mat-label>Описание</mat-label>
+                <textarea name="description" matInput required pattern="(.|\s)*\S(.|\s)*" [(ngModel)]="newTask.description" #description="ngModel"></textarea>
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+                <mat-label>Статус</mat-label>
+                <mat-select name="statusId" required [(ngModel)]="newTask.statusId" #statusId="ngModel">
+                    @for (item of Statuses$ | async; track $index) {
+                        <mat-option [value]="item.id">{{item.name}}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            <br>
+            <button mat-button type="submit" [disabled]="!addForm.form.valid">Сохранить</button>
+            <button mat-button (click)="cancle()">Отменить</button>
+        </form>
+    }
+
+    @if (selectedTask) {
+    <form (ngSubmit)="saveEdit()" #editForm="ngForm" class="input-form">
+        <mat-form-field>
+            <mat-label>Наименование</mat-label>
+            <input name="name" matInput required [(ngModel)]="selectedTask.name" #name="ngModel">
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+            <mat-label>Описание</mat-label>
+            <textarea name="description" matInput required [(ngModel)]="selectedTask.description" #description="ngModel"></textarea>
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+            <mat-label>Статус</mat-label>
+            <mat-select name="statusId" required [(ngModel)]="selectedTask.statusId" #statusId="ngModel">
+                @for (item of Statuses$ | async; track $index) {
+                    <mat-option [value]="item.id">{{item.name}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <br>
+        <button mat-button type="submit" [disabled]="!editForm.form.valid">Сохранить</button>
+        <button mat-button (click)="cancle()">Отмена</button>
+        <button mat-icon-button (click)="deleteTask()">
+            <mat-icon color="warn" fontIcon="delete"></mat-icon>
+        </button>
+    </form>
+    }
+
+
+    <button class="add-btn" mat-fab color="black"
+    (click)="addTask()">
+    <mat-icon fontIcon="add"></mat-icon>
+    </button>
+
+</div>
